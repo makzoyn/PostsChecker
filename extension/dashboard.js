@@ -205,11 +205,14 @@ function renderGroups(stats) {
   $('group-list').replaceChildren(allRow, ...rows);
 }
 
-function renderTableHead(showAd) {
-  const columns = showAd
+function tableColumns(showAd) {
+  return showAd
     ? [...COLUMNS.slice(0, COLUMNS_BEFORE_AD), ...AD_COLUMNS, ...COLUMNS.slice(COLUMNS_BEFORE_AD)]
     : COLUMNS;
-  const cells = columns.map((column) => {
+}
+
+function renderTableHead(showAd) {
+  const cells = tableColumns(showAd).map((column) => {
     const active = column.key === state.sortKey;
     const label = column.key
       ? h('button', {
@@ -225,7 +228,7 @@ function renderTableHead(showAd) {
       : column.label;
     return h('th', {
       scope: 'col',
-      class: column.left ? 'left' : null,
+      class: `col-${column.key ?? 'post'}${column.left ? ' left' : ''}`,
       'aria-sort': active ? (state.sortDir === 'desc' ? 'descending' : 'ascending') : null,
     }, label);
   });
@@ -246,7 +249,7 @@ function postRow(post, maxViews, showAd) {
       h('td', {}, post.adClicks === null ? '—' : formatNumber(post.adClicks)),
     ]
     : [];
-  return h('tr', {},
+  const row = h('tr', {},
     h('td', { class: 'post-cell' },
       h('a', {
         class: 'post-text',
@@ -254,7 +257,8 @@ function postRow(post, maxViews, showAd) {
         target: '_blank',
         rel: 'noreferrer',
       }, post.text || post.kind || 'Пост без текста'),
-      h('div', { class: 'post-meta' }, meta),
+      h('div', { class: 'post-meta' },
+        h('span', { class: 'compact-date' }, `${dateFormat.format(post.date * 1000)} · `), meta),
       adInfo),
     h('td', { class: 'muted' }, dateFormat.format(post.date * 1000)),
     h('td', { class: 'views-cell' },
@@ -266,6 +270,11 @@ function postRow(post, maxViews, showAd) {
     h('td', {}, formatNumber(post.likes)),
     h('td', {}, formatNumber(post.reposts)),
     h('td', {}, formatNumber(post.comments)));
+  tableColumns(showAd).forEach((column, index) => {
+    row.children[index].classList.add(`col-${column.key ?? 'post'}`);
+    row.children[index].setAttribute('data-label', column.label);
+  });
+  return row;
 }
 
 // Карточки для телефона
@@ -298,7 +307,13 @@ function adStub(post) {
   const { ad } = post;
   const earned = ad.earnedRub > 0;
   return h('div', { class: 'pc-stub' },
-    h('div', { class: 'pc-product' }, `${ad.product || 'Товар'}, ${moneyFormat.format(ad.ratePercent)}% с продажи`),
+    h('div', { class: 'pc-ad-heading' },
+      h('span', { class: 'pc-ad-label' }, 'AdBlogger'),
+      h('span', { class: 'pc-rate' }, `${moneyFormat.format(ad.ratePercent)}% с продажи`)),
+    h('div', { class: 'pc-product-row' },
+      h('div', { class: 'pc-product-info' },
+        h('div', { class: 'pc-product' }, ad.product || 'Товар без названия'),
+        ad.priceRub > 0 ? h('div', { class: 'pc-product-price' }, `Цена товара ${formatMoney(ad.priceRub)}`) : null)),
     h('div', { class: earned ? 'pc-earned' : 'pc-earned zero' },
       formatMoney(ad.earnedRub),
       h('small', {}, earned ? 'заработано' : 'пока не заработано')),
@@ -375,6 +390,7 @@ function renderPosts(stats) {
   const group = stats.groups.find((item) => item.id === state.groupId);
   $('posts-title').textContent = group ? group.name : 'Все посты';
   $('only-ad-label').hidden = !showAd;
+  document.querySelector('.table-wrap').classList.toggle('has-ad', showAd);
   renderTableHead(showAd);
   const visible = posts.slice(0, state.limit);
   $('post-rows').replaceChildren(...visible.map((post) => postRow(post, maxViews, showAd)));
