@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Набросок мобильной версии</title>
+  <!-- Набросок: настоящие токены дашборда и условные данные. В расширение не входит. -->
+  <link rel="stylesheet" href="../extension/dashboard.css">
+  <style>
+    body { max-width: 480px; margin: 0 auto; }
+
+    .m-top { padding: 20px 16px 12px; }
+    .m-hero { font: 400 30px/1.05 var(--display); letter-spacing: -.01em; }
+    .m-sub { margin-top: 6px; color: var(--ink-2); font-size: 13px; }
+
+    .m-periods { display: grid; grid-template-columns: repeat(4, 1fr); margin-top: 14px; }
+    .m-periods button { border-radius: 0; margin-left: -1px; padding: 9px 0; }
+    .m-periods button:first-child { border-radius: 8px 0 0 8px; margin-left: 0; }
+    .m-periods button:last-child { border-radius: 0 8px 8px 0; }
+    .m-periods button[aria-pressed="true"] { position: relative; background: var(--bar-soft); border-color: var(--bar); font-weight: 600; }
+
+    .m-actions { display: grid; grid-template-columns: 1fr 1fr auto; gap: 8px; margin-top: 8px; }
+    .m-actions button { padding: 9px 10px; border-radius: 8px; }
+
+    .m-filters { display: grid; gap: 8px; padding: 0 16px 14px; }
+    .m-selects { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    select {
+      width: 100%;
+      padding: 8px 10px;
+      font: inherit;
+      color: inherit;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+    }
+    .m-search { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 12px; }
+
+    .m-list { display: grid; gap: 8px; padding: 0 8px 24px; list-style: none; margin: 0; }
+
+    /* Заливка фона по ширине = доля просмотров от лидера списка. Это и есть главный приём макета. */
+    .m-card {
+      position: relative;
+      display: block;
+      padding: 14px 14px 12px;
+      color: inherit;
+      text-decoration: none;
+      background:
+        linear-gradient(to right, var(--bar) var(--share), var(--bar-soft) var(--share)) top / 100% 4px no-repeat,
+        var(--surface);
+      border-radius: 10px;
+    }
+    .m-card:focus-visible { outline: 2px solid var(--bar); outline-offset: 2px; }
+    .m-title { margin-top: 4px; font-size: 16px; font-weight: 600; line-height: 1.3; }
+    .m-meta { margin-top: 2px; color: var(--ink-2); font-size: 13px; }
+
+    .m-views { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-top: 10px; }
+    .m-views strong { font: 400 30px/1 var(--display); }
+    .m-score { text-align: right; font: 400 20px/1 var(--display); }
+    .m-caption { display: flex; justify-content: space-between; color: var(--ink-2); font-size: 12px; margin-top: 2px; }
+
+    .m-money {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px 12px;
+      margin-top: 12px;
+      padding-top: 10px;
+      border-top: 1px solid var(--line);
+      font-size: 14px;
+    }
+    .m-money b { font-weight: 600; }
+    .m-money .m-product { grid-column: 1 / -1; color: var(--ink-2); font-size: 13px; }
+    .m-engage { margin-top: 10px; color: var(--ink-2); font-size: 13px; }
+  </style>
+</head>
+<body>
+  <header class="m-top">
+    <h1 class="m-hero">396 047 просмотров за 30 дней</h1>
+    <p class="m-sub">94 поста в 5 сообществах. AdBlogger: заработано 129,5 ₽, прогноз 524 ₽.</p>
+    <div class="m-periods" role="group" aria-label="Период">
+      <button type="button">7 дней</button>
+      <button type="button" aria-pressed="true">30 дней</button>
+      <button type="button">90 дней</button>
+      <button type="button">Год</button>
+    </div>
+    <div class="m-actions">
+      <button type="button" class="primary">Обновить</button>
+      <button type="button">AdBlogger</button>
+      <button type="button">Настройки</button>
+    </div>
+  </header>
+
+  <div class="m-filters">
+    <div class="m-selects">
+      <select aria-label="Сообщество">
+        <option>Все сообщества</option>
+        <option>Находки для дома: 328 667</option>
+        <option>Кухня без лишнего: 56 602</option>
+      </select>
+      <select aria-label="Сортировка">
+        <option>По просмотрам</option>
+        <option>По заработку</option>
+        <option>К типичному</option>
+        <option>Сначала новые</option>
+      </select>
+    </div>
+    <div class="m-search">
+      <input type="search" placeholder="Найти в тексте поста" aria-label="Найти в тексте поста">
+      <label class="check"><input type="checkbox"> AdBlogger</label>
+    </div>
+  </div>
+
+  <ul class="m-list">
+    <li>
+      <a class="m-card" href="#" style="--share: 100%">
+        <div class="m-title">Лампа с датчиком движения для тёмного…</div>
+        <div class="m-meta">Находки для дома, 10 окт</div>
+        <div class="m-views"><strong>33 106</strong><span class="m-score">×5,0</span></div>
+        <div class="m-caption"><span>просмотров</span><span>к типичному</span></div>
+        <div class="m-money">
+          <span class="m-product">AdBlogger: Лампа с датчиком, 8%</span>
+          <span>Заработано <b>120 ₽</b></span>
+          <span><b>27,5 ₽</b> на 1000</span>
+          <span>Прогноз <b>450 ₽</b></span>
+          <span><b>96</b> кликов</span>
+        </div>
+        <div class="m-engage">993 лайка, 132 репоста, 66 комментариев</div>
+      </a>
+    </li>
+    <li>
+      <a class="m-card" href="#" style="--share: 94%">
+        <div class="m-title">Фото</div>
+        <div class="m-meta">Находки для дома, 18 окт, реклама</div>
+        <div class="m-views"><strong>30 979</strong><span class="m-score">×4,6</span></div>
+        <div class="m-caption"><span>просмотров</span><span>к типичному</span></div>
+        <div class="m-engage">929 лайков, 124 репоста, 62 комментария</div>
+      </a>
+    </li>
+    <li>
+      <a class="m-card" href="#" style="--share: 31%">
+        <div class="m-title">Подборка органайзеров для ящиков до 500…</div>
+        <div class="m-meta">Кухня без лишнего, 22 окт, репост</div>
+        <div class="m-views"><strong>10 359</strong><span class="m-score">×1,6</span></div>
+        <div class="m-caption"><span>просмотров</span><span>к типичному</span></div>
+        <div class="m-money">
+          <span class="m-product">AdBlogger: Набор органайзеров, 8%</span>
+          <span>Заработано <b>9,5 ₽</b></span>
+          <span><b>0,92 ₽</b> на 1000</span>
+          <span>Прогноз <b>18 ₽</b></span>
+          <span><b>12</b> кликов</span>
+        </div>
+        <div class="m-engage">311 лайков, 41 репост, 21 комментарий</div>
+      </a>
+    </li>
+    <li>
+      <a class="m-card" href="#" style="--share: 3%">
+        <div class="m-title">Складная сушилка, которая помещается за дверью…</div>
+        <div class="m-meta">Находки для дома, сегодня</div>
+        <div class="m-views"><strong>1 012</strong><span class="m-score">—</span></div>
+        <div class="m-caption"><span>просмотров</span><span>свежий пост</span></div>
+        <div class="m-engage">31 лайк, 4 репоста, 2 комментария</div>
+      </a>
+    </li>
+  </ul>
+</body>
+</html>

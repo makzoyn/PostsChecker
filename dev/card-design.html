@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Карточка поста</title>
+  <!-- Дизайн карточки поста для мобильной версии: все состояния на условных данных. В расширение не входит. -->
+  <link rel="stylesheet" href="../extension/dashboard.css">
+  <style>
+    body { max-width: 480px; margin: 0 auto; padding: 16px 8px 32px; }
+    .sheet-title { padding: 0 8px 12px; font: 400 22px/1.2 var(--display); }
+    /* minmax(0, 1fr): иначе заголовок без переноса растягивает колонку шире экрана. */
+    .cards { display: grid; grid-template-columns: minmax(0, 1fr); gap: 10px; list-style: none; margin: 0; padding: 0; }
+
+    .card {
+      --notch: 9px;
+      position: relative;
+      display: block;
+      color: inherit;
+      text-decoration: none;
+      background:
+        linear-gradient(to right, var(--bar) var(--share), var(--bar-soft) var(--share)) top / 100% 4px no-repeat,
+        var(--surface);
+      border-radius: 12px;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .card:active { background-color: var(--bg); }
+    .card:focus-visible { outline: 2px solid var(--bar); outline-offset: 2px; }
+
+    .post { padding: 16px 16px 14px; }
+    .title {
+      overflow: hidden;
+      font-size: 17px;
+      font-weight: 600;
+      line-height: 1.3;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+    .meta { margin-top: 3px; color: var(--ink-2); font-size: 13px; }
+
+    .numbers {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: end;
+      gap: 0 16px;
+      margin-top: 14px;
+    }
+    .views { font: 400 34px/1 var(--display); letter-spacing: -.01em; }
+    .score { font: 400 22px/1 var(--display); text-align: right; }
+    .score.low { color: var(--ink-2); }
+    .numbers small { display: block; margin-top: 4px; color: var(--ink-2); font: 13px/1.3 var(--text); }
+    .numbers small.right { text-align: right; }
+    .engage { margin-top: 12px; color: var(--ink-2); font-size: 13px; }
+
+    /* Отрывной чек AdBlogger: пунктир и два выреза цвета фона страницы на краях карточки. */
+    .stub {
+      position: relative;
+      padding: 14px 16px 16px;
+      border-top: 1.5px dashed var(--line);
+    }
+    .stub::before, .stub::after {
+      content: "";
+      position: absolute;
+      top: calc(var(--notch) * -1 - 1px);
+      width: calc(var(--notch) * 2);
+      height: calc(var(--notch) * 2);
+      background: var(--bg);
+      border-radius: 50%;
+    }
+    .stub::before { left: calc(var(--notch) * -1); }
+    .stub::after { right: calc(var(--notch) * -1); }
+
+    .product { overflow: hidden; color: var(--ink-2); font-size: 13px; white-space: nowrap; text-overflow: ellipsis; }
+    .earned { margin-top: 6px; font: 400 30px/1 var(--display); }
+    .earned small { display: block; margin-top: 4px; color: var(--ink-2); font: 13px/1.3 var(--text); }
+    .earned.zero { color: var(--ink-2); }
+    .facts { display: grid; grid-template-columns: repeat(3, 1fr); margin-top: 14px; }
+    .facts div { padding: 0 10px; border-left: 1px solid var(--line); }
+    .facts div:first-child { padding-left: 0; border-left: 0; }
+    .facts b { display: block; font-size: 15px; font-weight: 600; }
+    .facts span { color: var(--ink-2); font-size: 12px; }
+
+    @media (prefers-reduced-motion: no-preference) {
+      .card { transition: background-color .12s; }
+    }
+  </style>
+</head>
+<body>
+  <h1 class="sheet-title">Карточка поста: состояния</h1>
+  <ul class="cards">
+    <li>
+      <a class="card" href="#" style="--share: 100%">
+        <div class="post">
+          <div class="title">Лампа с датчиком движения для тёмного…</div>
+          <div class="meta">Находки для дома, 10 октября</div>
+          <div class="numbers">
+            <div class="views">33 106</div>
+            <div class="score">×5,0</div>
+            <small>просмотров</small>
+            <small class="right">выше обычного</small>
+          </div>
+          <div class="engage">993 лайка, 132 репоста, 66 комментариев</div>
+        </div>
+        <div class="stub">
+          <div class="product">Лампа с датчиком движения, 8% с продажи</div>
+          <div class="earned">120 ₽<small>заработано</small></div>
+          <div class="facts">
+            <div><b>27,5 ₽</b><span>на 1000 просм.</span></div>
+            <div><b>450 ₽</b><span>прогноз</span></div>
+            <div><b>96</b><span>кликов</span></div>
+          </div>
+        </div>
+      </a>
+    </li>
+    <li>
+      <a class="card" href="#" style="--share: 62%">
+        <div class="post">
+          <div class="title">Сравнили четыре недорогих блендера: какой…</div>
+          <div class="meta">Кухня без лишнего, 12 октября, закреплён</div>
+          <div class="numbers">
+            <div class="views">20 358</div>
+            <div class="score">×1,6</div>
+            <small>просмотров</small>
+            <small class="right">выше обычного</small>
+          </div>
+          <div class="engage">611 лайков, 41 репост, 21 комментарий</div>
+        </div>
+      </a>
+    </li>
+    <li>
+      <a class="card" href="#" style="--share: 18%">
+        <div class="post">
+          <div class="title">Подборка органайзеров для ящиков до 500…</div>
+          <div class="meta">Кухня без лишнего, 22 октября, репост</div>
+          <div class="numbers">
+            <div class="views">5 912</div>
+            <div class="score low">×0,4</div>
+            <small>просмотров</small>
+            <small class="right">ниже обычного</small>
+          </div>
+          <div class="engage">88 лайков, 6 репостов, 2 комментария</div>
+        </div>
+        <div class="stub">
+          <div class="product">Набор органайзеров, 8% с продажи</div>
+          <div class="earned zero">0 ₽<small>пока не заработано</small></div>
+          <div class="facts">
+            <div><b>0 ₽</b><span>на 1000 просм.</span></div>
+            <div><b>56 ₽</b><span>прогноз</span></div>
+            <div><b>12</b><span>кликов</span></div>
+          </div>
+        </div>
+      </a>
+    </li>
+    <li>
+      <a class="card" href="#" style="--share: 3%">
+        <div class="post">
+          <div class="title">Складная сушилка, которая помещается за дверью…</div>
+          <div class="meta">Находки для дома, сегодня в 09:40</div>
+          <div class="numbers">
+            <div class="views">1 012</div>
+            <div class="score low">—</div>
+            <small>просмотров</small>
+            <small class="right">свежий, ещё набирает</small>
+          </div>
+          <div class="engage">31 лайк, 4 репоста, 2 комментария</div>
+        </div>
+      </a>
+    </li>
+    <li>
+      <a class="card" href="#" style="--share: 0%">
+        <div class="post">
+          <div class="title">Фото</div>
+          <div class="meta">Тихий канал, 2 октября, реклама</div>
+          <div class="numbers">
+            <div class="views">—</div>
+            <div class="score low">—</div>
+            <small>VK не передал просмотры</small>
+            <small class="right">не сравнить</small>
+          </div>
+          <div class="engage">4 лайка, 0 репостов, 0 комментариев</div>
+        </div>
+      </a>
+    </li>
+  </ul>
+</body>
+</html>

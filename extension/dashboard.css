@@ -1,0 +1,403 @@
+:root {
+  color-scheme: light dark;
+  --bg: #eef0f6;
+  --surface: #ffffff;
+  --ink: #191b2c;
+  --ink-2: #565a73;
+  --line: #d9dce8;
+  --bar: #4a3fd0;
+  --bar-soft: #e3e1fa;
+  --on-bar: #ffffff;
+  --danger: #a3262c;
+  --danger-soft: #fbe9ea;
+  --display: "Bahnschrift", "Segoe UI Variable Display", "Segoe UI", system-ui, sans-serif;
+  --text: "Segoe UI Variable Text", "Segoe UI", system-ui, sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #12131c;
+    --surface: #1b1d2a;
+    --ink: #ecedf5;
+    --ink-2: #a3a6bd;
+    --line: #2f3244;
+    --bar: #8f87f2;
+    --bar-soft: #2a2850;
+    --on-bar: #12131c;
+    --danger: #ff9a9a;
+    --danger-soft: #3a1c20;
+  }
+}
+
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font: 14px/1.45 var(--text);
+  font-variant-numeric: tabular-nums;
+}
+
+h1, h2, h3, p, ul, ol { margin: 0; }
+a { color: inherit; }
+
+button, input {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  padding: 7px 12px;
+  background: transparent;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  cursor: pointer;
+}
+button:hover:not(:disabled) { border-color: var(--ink-2); }
+button:disabled { opacity: .55; cursor: default; }
+button.primary {
+  background: var(--bar);
+  border-color: var(--bar);
+  color: var(--on-bar);
+  font-weight: 600;
+}
+:focus-visible {
+  outline: 2px solid var(--bar);
+  outline-offset: 2px;
+}
+
+input, textarea {
+  width: 100%;
+  padding: 7px 10px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  font: inherit;
+  color: inherit;
+}
+textarea { display: block; resize: vertical; }
+
+/* Шапка: само предложение с числом и есть главный элемент страницы */
+.top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px 32px;
+  padding: 28px 32px 22px;
+}
+#hero {
+  font: 400 clamp(30px, 4.4vw, 56px)/1.05 var(--display);
+  letter-spacing: -.01em;
+}
+#subhero { margin-top: 6px; color: var(--ink-2); }
+.load-adblogger { margin-top: 12px; }
+
+.controls { display: flex; flex-wrap: wrap; gap: 8px; }
+.periods { display: flex; }
+.periods button { border-radius: 0; margin-left: -1px; }
+.periods button:first-child { border-radius: 6px 0 0 6px; margin-left: 0; }
+.periods button:last-child { border-radius: 0 6px 6px 0; }
+.periods button[aria-pressed="true"] {
+  position: relative;
+  background: var(--bar-soft);
+  border-color: var(--bar);
+  font-weight: 600;
+}
+
+.progress { padding: 0 32px 16px; }
+.progress-track {
+  height: 4px;
+  background: var(--bar-soft);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.progress-bar { height: 100%; width: 0; background: var(--bar); }
+#progress-text { margin-top: 6px; color: var(--ink-2); }
+
+.banner {
+  margin: 0 32px 16px;
+  padding: 10px 14px;
+  background: var(--danger-soft);
+  color: var(--danger);
+  border-radius: 6px;
+}
+
+.welcome { max-width: 60ch; padding: 24px 32px 48px; }
+.welcome h2 { font: 400 26px/1.2 var(--display); margin-bottom: 10px; }
+.welcome ol { margin: 16px 0 20px; padding-left: 20px; }
+.welcome li { margin-bottom: 6px; }
+
+/* Две колонки на одной поверхности вместо набора карточек */
+.board {
+  display: grid;
+  grid-template-columns: minmax(280px, 340px) minmax(0, 1fr);
+  background: var(--surface);
+  border-top: 1px solid var(--line);
+  min-height: calc(100vh - 140px);
+}
+.board h2 { font: 400 20px/1.2 var(--display); }
+
+.groups { padding: 20px 0; border-right: 1px solid var(--line); }
+.groups h2 { padding: 0 24px 12px 32px; }
+.groups ul { list-style: none; padding: 0; }
+
+.group {
+  display: grid;
+  grid-template-columns: 36px minmax(0, 1fr) auto;
+  gap: 2px 10px;
+  align-items: center;
+  width: 100%;
+  padding: 10px 20px 10px 32px;
+  background: none;
+  border: 0;
+  border-left: 3px solid transparent;
+  border-radius: 0;
+  text-align: left;
+}
+.group:hover:not(:disabled) { background: var(--bg); }
+.group[aria-pressed="true"] { background: var(--bar-soft); border-left-color: var(--bar); }
+.group img, .group .avatar {
+  grid-row: span 3;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: var(--bar-soft);
+}
+.group-name { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font-weight: 600; }
+.group-views { font-weight: 600; }
+.group-meta { grid-column: 2 / 4; color: var(--ink-2); font-size: 12px; }
+.group-bar { grid-column: 2 / 4; }
+.group-error { grid-column: 2 / 4; color: var(--danger); font-size: 12px; }
+
+.bar-track { height: 4px; border-radius: 2px; }
+.bar { height: 100%; min-width: 2px; background: var(--bar); border-radius: 0 4px 4px 0; }
+
+.posts { padding: 20px 32px 32px 24px; min-width: 0; }
+.posts-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 24px;
+  margin-bottom: 12px;
+}
+.posts-tools { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; }
+.posts-tools input[type="search"] { width: 280px; max-width: 100%; }
+.check { display: inline-flex; align-items: center; gap: 6px; cursor: pointer; white-space: nowrap; }
+.check input { width: auto; accent-color: var(--bar); }
+
+.adblogger { margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--line); }
+.adblogger .hint { margin: 0 0 8px; }
+.adblogger a { color: inherit; }
+.adblogger details { margin-top: 8px; }
+.adblogger summary { padding: 4px 0; cursor: pointer; font-weight: 600; }
+.ad-list { list-style: none; padding: 0; }
+.ad-list li {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 2px 16px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--line);
+}
+.ad-list span:last-child { color: var(--ink-2); }
+
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; }
+th {
+  padding: 0 10px 6px;
+  border-bottom: 1px solid var(--line);
+  color: var(--ink-2);
+  font-weight: 400;
+  text-align: right;
+  white-space: nowrap;
+}
+th.left, td.left { text-align: left; }
+th button {
+  padding: 2px 0;
+  background: none;
+  border: 0;
+  border-radius: 2px;
+  color: inherit;
+}
+th button:hover { color: var(--ink); }
+th[aria-sort="ascending"] button,
+th[aria-sort="descending"] button { color: var(--ink); font-weight: 600; }
+td {
+  padding: 10px;
+  border-bottom: 1px solid var(--line);
+  text-align: right;
+  vertical-align: top;
+  white-space: nowrap;
+}
+td.post-cell {
+  width: 100%;
+  min-width: 260px;
+  max-width: 0;
+  text-align: left;
+  white-space: normal;
+}
+.post-text {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-decoration: none;
+}
+.post-text:hover { text-decoration: underline; }
+.post-meta { margin-top: 2px; color: var(--ink-2); font-size: 12px; }
+td.views-cell { min-width: 120px; font-weight: 600; }
+td.views-cell .bar-track { margin-top: 5px; }
+td.views-cell .bar { margin-left: auto; border-radius: 4px 0 0 4px; }
+td.muted { color: var(--ink-2); }
+td.money-cell { font-weight: 600; }
+
+.empty { padding: 32px 0; color: var(--ink-2); }
+#show-more { display: block; margin: 16px auto 0; }
+
+dialog {
+  width: min(480px, calc(100vw - 32px));
+  padding: 24px;
+  background: var(--surface);
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+dialog::backdrop { background: rgb(10 11 20 / .5); }
+dialog h2 { font: 400 24px/1.2 var(--display); }
+dialog h3 { margin: 20px 0 8px; font-size: 14px; }
+dialog label { display: block; margin: 10px 0 4px; }
+.status { margin-top: 4px; color: var(--ink-2); }
+.hint { margin: 6px 0 10px; color: var(--ink-2); font-size: 12px; }
+.error { margin-top: 14px; color: var(--danger); }
+.dialog-actions { display: flex; justify-content: space-between; gap: 8px; margin-top: 24px; }
+
+/* Карточки постов: на телефоне вместо таблицы. */
+.mobile-selects, .post-cards { display: none; }
+
+select {
+  width: 100%;
+  padding: 8px 10px;
+  font: inherit;
+  color: inherit;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.post-cards {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Полоса сверху: доля просмотров от лидера списка. */
+.post-card {
+  --notch: 9px;
+  position: relative;
+  display: block;
+  color: inherit;
+  text-decoration: none;
+  background:
+    linear-gradient(to right, var(--bar) var(--share), var(--bar-soft) var(--share)) top / 100% 4px no-repeat,
+    var(--surface);
+  border-radius: 12px;
+  -webkit-tap-highlight-color: transparent;
+}
+.post-card:active { background-color: var(--bg); }
+.post-card:focus-visible { outline: 2px solid var(--bar); outline-offset: 2px; }
+
+.pc-post { padding: 16px 16px 14px; }
+.pc-title {
+  overflow: hidden;
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1.3;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.pc-meta { margin-top: 3px; color: var(--ink-2); font-size: 13px; }
+.pc-numbers {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: end;
+  gap: 0 16px;
+  margin-top: 14px;
+}
+.pc-views { font: 400 34px/1 var(--display); letter-spacing: -.01em; }
+.pc-score { font: 400 22px/1 var(--display); text-align: right; }
+.pc-score.low { color: var(--ink-2); }
+.pc-numbers small { display: block; margin-top: 4px; color: var(--ink-2); font: 13px/1.3 var(--text); }
+.pc-numbers small.right { text-align: right; }
+.pc-engage { margin-top: 12px; color: var(--ink-2); font-size: 13px; }
+
+/* Отрывной чек AdBlogger: пунктир и вырезы цвета фона страницы на краях карточки. */
+.pc-stub {
+  position: relative;
+  padding: 14px 16px 16px;
+  border-top: 1.5px dashed var(--line);
+}
+.pc-stub::before, .pc-stub::after {
+  content: "";
+  position: absolute;
+  top: calc(var(--notch) * -1 - 1px);
+  width: calc(var(--notch) * 2);
+  height: calc(var(--notch) * 2);
+  background: var(--bg);
+  border-radius: 50%;
+}
+.pc-stub::before { left: calc(var(--notch) * -1); }
+.pc-stub::after { right: calc(var(--notch) * -1); }
+.pc-product { overflow: hidden; color: var(--ink-2); font-size: 13px; white-space: nowrap; text-overflow: ellipsis; }
+.pc-earned { margin-top: 6px; font: 400 30px/1 var(--display); }
+.pc-earned small { display: block; margin-top: 4px; color: var(--ink-2); font: 13px/1.3 var(--text); }
+.pc-earned.zero { color: var(--ink-2); }
+.pc-facts { display: grid; grid-template-columns: repeat(3, 1fr); margin-top: 14px; }
+.pc-facts div { padding: 0 10px; border-left: 1px solid var(--line); }
+.pc-facts div:first-child { padding-left: 0; border-left: 0; }
+.pc-facts b { display: block; font-size: 15px; font-weight: 600; }
+.pc-facts span { color: var(--ink-2); font-size: 12px; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .post-card { transition: background-color .12s; }
+}
+
+@media (max-width: 860px) {
+  .top { padding: 20px 16px 16px; }
+  .progress { padding: 0 16px 16px; }
+  .banner { margin: 0 16px 16px; }
+  .welcome { padding: 16px 16px 32px; }
+  .board { grid-template-columns: minmax(0, 1fr); }
+  .groups { border-right: 0; border-bottom: 1px solid var(--line); }
+  .groups h2 { padding-left: 16px; }
+  .group { padding-left: 16px; padding-right: 16px; }
+  .groups ul { max-height: 280px; overflow-y: auto; }
+  .posts { padding: 16px; }
+}
+
+@media (max-width: 600px) {
+  #hero { font-size: 30px; }
+  .controls { display: grid; grid-template-columns: 1fr 1fr; width: 100%; }
+  .periods { display: grid; grid-template-columns: repeat(4, 1fr); grid-column: 1 / -1; }
+  .periods button { padding: 9px 0; }
+  .load-adblogger { width: 100%; }
+
+  /* На телефоне сообщество выбирается списком, а посты идут карточками на фоне страницы. */
+  .board { display: block; min-height: 0; background: transparent; border-top: 0; }
+  .groups, .table-wrap, #posts-title { display: none; }
+  .posts { padding: 0 8px 24px; }
+  .posts-head { display: grid; gap: 8px; margin: 0 8px 12px; }
+  .mobile-selects { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .posts-tools { display: grid; grid-template-columns: 1fr auto; gap: 12px; }
+  .posts-tools input[type="search"] { width: 100%; }
+  .posts-tools .check { order: 2; }
+  .post-cards { display: grid; }
+  #show-more { width: 100%; }
+  .adblogger { margin: 24px 8px 0; }
+}

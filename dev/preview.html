@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <base href="/extension/">
+  <title>Предпросмотр дашборда</title>
+</head>
+<body>
+<script type="module">
+  // ?state=welcome показывает экран подключения, ?adblogger=1 добавляет условные заявки AdBlogger.
+  import '/extension/adblogger/parse.js';
+  import { installMock } from '/dev/mock-chrome.js';
+
+  const params = new URLSearchParams(location.search);
+  installMock({
+    connected: params.get('state') !== 'welcome',
+    adblogger: params.has('adblogger'),
+    cabinet: params.get('cabinet') ?? 'responds',
+  });
+
+  const source = await (await fetch('/extension/dashboard.html')).text();
+  const page = new DOMParser().parseFromString(source, 'text/html');
+  page.querySelectorAll('script').forEach((script) => script.remove());
+  document.head.append(...page.head.querySelectorAll('link'));
+  document.body.append(...page.body.children);
+  await import('/extension/dashboard.js');
+</script>
+</body>
+</html>

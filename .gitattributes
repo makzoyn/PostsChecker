@@ -1,0 +1,3 @@
+# Одинаковые переводы строк на всех системах: иначе копия в orion/extension может отличаться от extension.
+* text=auto eol=lf
+*.png binary

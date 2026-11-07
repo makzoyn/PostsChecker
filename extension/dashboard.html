@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Просмотры сообществ VK</title>
+  <link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+  <header class="top">
+    <div class="headline">
+      <h1 id="hero">Просмотры сообществ</h1>
+      <p id="subhero"></p>
+      <button type="button" id="load-adblogger" class="load-adblogger" hidden>Загрузить AdBlogger</button>
+    </div>
+    <div class="controls">
+      <div class="periods" role="group" aria-label="Период">
+        <button type="button" data-days="7">7 дней</button>
+        <button type="button" data-days="30">30 дней</button>
+        <button type="button" data-days="90">90 дней</button>
+        <button type="button" data-days="365">Год</button>
+      </div>
+      <button type="button" id="refresh" class="primary">Обновить</button>
+      <button type="button" id="open-settings">Настройки</button>
+    </div>
+  </header>
+
+  <div id="progress" class="progress" hidden>
+    <div class="progress-track"><div id="progress-bar" class="progress-bar"></div></div>
+    <p id="progress-text" role="status"></p>
+  </div>
+  <p id="banner" class="banner" role="alert" hidden></p>
+
+  <main id="welcome" class="welcome" hidden>
+    <h2>Подключите аккаунт ВКонтакте</h2>
+    <p>Расширение читает ваши сообщества и посты через VK API. Данные остаются в этом браузере.</p>
+    <ol>
+      <li>Создайте приложение на <a href="https://id.vk.ru/about/business/go" target="_blank" rel="noreferrer">сайте VK ID</a>.</li>
+      <li>Добавьте адрес из настроек расширения в доверенные адреса перенаправления.</li>
+      <li>Вставьте в настройках ссылки на свои сообщества, укажите ID приложения и войдите.</li>
+    </ol>
+    <button type="button" id="welcome-settings" class="primary">Открыть настройки</button>
+  </main>
+
+  <main id="board" class="board" hidden>
+    <aside class="groups" aria-label="Сообщества">
+      <h2>Сообщества</h2>
+      <ul id="group-list"></ul>
+    </aside>
+    <section class="posts" aria-label="Посты">
+      <div class="posts-head">
+        <h2 id="posts-title">Посты</h2>
+        <div class="mobile-selects">
+          <select id="group-select" aria-label="Сообщество"></select>
+          <select id="sort-select" aria-label="Сортировка"></select>
+        </div>
+        <div class="posts-tools">
+          <label class="check" id="only-ad-label" hidden><input type="checkbox" id="only-ad"> Только AdBlogger</label>
+          <input type="search" id="search" placeholder="Найти в тексте поста" aria-label="Найти в тексте поста">
+        </div>
+      </div>
+      <ul id="post-cards" class="post-cards"></ul>
+      <div class="table-wrap">
+        <table>
+          <thead><tr id="table-head"></tr></thead>
+          <tbody id="post-rows"></tbody>
+        </table>
+      </div>
+      <p id="posts-empty" class="empty" hidden></p>
+      <button type="button" id="show-more" hidden>Показать ещё</button>
+
+      <div class="adblogger">
+        <p id="ad-status" class="hint"></p>
+        <details id="ad-pending" hidden>
+          <summary id="ad-pending-title"></summary>
+          <ul id="ad-pending-list" class="ad-list"></ul>
+        </details>
+        <details id="ad-unmatched" hidden>
+          <summary id="ad-unmatched-title"></summary>
+          <p class="hint">Сообщества нет в вашем списке, его стена не прочиталась, или пост удалён.</p>
+          <ul id="ad-unmatched-list" class="ad-list"></ul>
+        </details>
+      </div>
+    </section>
+  </main>
+
+  <dialog id="settings">
+    <form id="settings-form" method="dialog">
+      <h2>Настройки</h2>
+      <p id="connection-status" class="status"></p>
+
+      <h3>Ваши сообщества</h3>
+      <label for="group-links">Ссылки на сообщества, по одной в строке</label>
+      <textarea id="group-links" rows="5" spellcheck="false" placeholder="https://vk.com/название&#10;https://vk.com/club123456"></textarea>
+      <p class="hint">Если оставить поле пустым, расширение попробует получить список само. Для этого нужно право groups.</p>
+      <button type="button" id="save-links">Сохранить список</button>
+
+      <h3>Вход через VK ID</h3>
+      <label for="client-id">ID приложения</label>
+      <input id="client-id" inputmode="numeric" autocomplete="off">
+      <label for="redirect-uri">Адрес перенаправления</label>
+      <input id="redirect-uri" autocomplete="off" spellcheck="false">
+      <p class="hint">В настройках приложения VK ID добавьте домен этого адреса в базовые домены, а сам адрес в доверенные. Адрес должен совпадать полностью, включая косую черту в конце.</p>
+      <button type="button" id="login" class="primary">Войти через VK ID</button>
+
+      <h3>Или готовый ключ доступа</h3>
+      <label for="manual-token">Ключ пользователя или сервисный ключ приложения</label>
+      <input id="manual-token" type="password" autocomplete="off" spellcheck="false">
+      <p class="hint">Такой ключ не обновляется сам: когда он истечёт, вставьте новый. Для сервисного ключа нужен список ссылок выше, а закрытые стены он может не прочитать.</p>
+      <button type="button" id="save-token">Сохранить ключ</button>
+
+      <p id="settings-error" class="error" role="alert" hidden></p>
+      <div class="dialog-actions">
+        <button type="button" id="logout">Выйти и удалить данные</button>
+        <button type="button" id="close-settings">Закрыть</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script type="module" src="dashboard.js"></script>
+</body>
+</html>
