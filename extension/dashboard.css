@@ -442,7 +442,6 @@ th { padding: 12px 10px; background: var(--bg); font-size: 12px; border-bottom: 
 th:first-child { border-radius: 10px 0 0 10px; }
 th:last-child { border-radius: 0 10px 10px 0; }
 td { padding: 17px 10px; border-color: var(--line); }
-tbody tr:hover { background: var(--bg); }
 .post-text { font-weight: 550; line-height: 1.5; }
 .post-meta { margin-top: 5px; font-size: 11px; }
 td.views-cell { color: var(--bar); }
